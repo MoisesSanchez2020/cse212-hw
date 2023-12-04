@@ -1,4 +1,6 @@
 public static class TreesTester {
+    public static int Data { get; private set; }
+
     /// <summary>
     /// Entry point for the Prove 9 tests
     /// </summary>
@@ -96,7 +98,85 @@ public static class TreesTester {
     /// <param name="first">the first index in the sortedNumbers to insert</param>
     /// <param name="last">the last index in the sortedNumbers to insert</param>
     /// <param name="bst">the BinarySearchTree in which to insert the values</param>
-    private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst) {
-        // TODO Start Problem 5
+private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst) {
+    if (first > last) {
+        return;
     }
+    int mid = first + (last - first) / 2;
+    bst.Insert(sortedNumbers[mid]);
+    InsertMiddle(sortedNumbers, first, mid - 1, bst);
+    InsertMiddle(sortedNumbers, mid + 1, last, bst);
+}
+
+// Problem 1: Insert Unique Values Only Solution
+// Insert this method in the Node class
+public static void Insert(int value) {
+    if (value < Data) {
+        if (Left is null)
+            Left = new Node(value);
+        else
+            Left.Insert(value);
+    }
+    else if (value > Data) {
+        if (Right is null)
+            Right = new Node(value);
+        else
+            Right.Insert(value);
+    }
+    // Do nothing if value == Data (to prevent duplicates)
+}
+
+
+// Problem 2: Contains Method Solution
+// Insert this method in the Node class
+public static bool Contains(int value) {
+    if (value == Data) {
+        return true;
+    } else if (value < Data && Left != null) {
+        return Left.Contains(value);
+    } else if (value > Data && Right != null) {
+        return Right.Contains(value);
+    }
+    return false;
+}
+
+
+// Problem 3: Traverse Backwards Solution
+// Insert this method in the BinarySearchTree class
+public static IEnumerable<int> TraverseBackward() {
+    if (this.Right != null) {
+        foreach (var value in this.Right.TraverseBackward()) {
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                yield return value;
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+            }
+    }
+    yield return this.Value;
+    if (this.Left != null) {
+        foreach (var value in this.Left.TraverseBackward()) {
+            yield return value;
+        }
+    }
+}
+
+// Problem 4: Tree Height Solution
+// Insert this method in the Node class
+public static int GetHeight() {
+    int leftHeight = Left?.GetHeight() ?? 0;
+    int rightHeight = Right?.GetHeight() ?? 0;
+    return 1 + Math.Max(leftHeight, rightHeight);
+}
+
+
+// Problem 5: Create Tree from Sorted List Solution
+// Insert this function outside the BinarySearchTree class
+public static void InsertMiddle(List<int> sortedList, int first, int last) {
+    if (first > last) {
+        return;
+    }
+    int mid = first + (last - first) / 2;
+    tree.Insert(sortedList[mid]);
+    InsertMiddle(sortedList, first, mid - 1);
+    InsertMiddle(sortedList, mid + 1, last);
+}
 }
